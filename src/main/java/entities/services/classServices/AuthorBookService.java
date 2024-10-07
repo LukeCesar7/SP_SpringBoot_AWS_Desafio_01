@@ -98,7 +98,7 @@ public class AuthorBookService {
             em.persist(author);
             em.getTransaction().commit();
 
-            System.out.println("Enter ISBN: (13-digits) "); 
+            System.out.println("Enter ISBN: (13-digits) "); //author-book
             long isbn = sc.nextLong();
             sc.nextLine();
             //isbnPolicy
@@ -135,6 +135,36 @@ public class AuthorBookService {
         } catch (Exception e) {
             System.out.println("Error! Observes date model (dd/MM/yyyy) / Quantity only accepts integer " +
                     "numbers" + e.getMessage());
+        }
+    }
+
+    public void consultBook() {
+        try {
+            System.out.println("Consult Book");
+            System.out.println("Enter ID: ");
+            Long id = sc.nextLong();
+
+            Book findId = em.find(Book.class, id);
+            System.out.println(findId);
+        } catch (Exception e) {
+            System.out.println("Error! Book not found / ID accepts only numbers!" + e.getMessage());
+        }
+    }
+
+    public void removeBook() {
+        try {
+            System.out.println("Remove Book");
+            System.out.println("Enter ISBN: ");
+            long isbn = sc.nextLong();
+            Book findID = em.find(Book.class, isbn);
+
+            em.getTransaction().begin();
+            em.remove(findID);
+            em.getTransaction().commit();
+
+            System.out.println("Removed Book");
+        } catch (Exception e) {
+            System.out.println("Error! Book not found / ID accepts only numbers!" + e.getMessage());
         }
     }
 }
