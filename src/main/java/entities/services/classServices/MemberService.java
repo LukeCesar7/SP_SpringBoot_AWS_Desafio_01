@@ -25,40 +25,44 @@ public class MemberService {
     //------------------------------------------------------------------------------------------------------------MEMBER
     public void addMember() {
 
+        try {
+            System.out.println("Enter member's name: ");
+            String name = sc.nextLine();
+            System.out.println("Enter member's email: ");
+            String email = sc.nextLine();
+            System.out.println("Enter member's address:  *Postal Code / Home Number  ");
+            String address = sc.nextLine();
+            System.out.println("Enter member's phone number: *Code area and number");
+            String phone = sc.nextLine();
+            System.out.println("Enter a date of registration : *(dd/MM/yyyy)");
+            LocalDate joinDate = LocalDate.parse(sc.next(), dTF);
 
-        System.out.println("Enter member's name: ");
-        String name = sc.nextLine();
-        System.out.println("Enter member's email: ");
-        String email = sc.nextLine();
-        System.out.println("Enter member's address:  *Postal Code / Home Number  ");
-        String address = sc.nextLine();
-        System.out.println("Enter member's phone number: *Code area and number");
-        String phone = sc.nextLine();
-        System.out.println("Enter a date of registration : *(dd/MM/yyyy)");
-        LocalDate joinDate = LocalDate.parse(sc.next(), dTF);
+            Member member = new Member(name, email, address, phone, joinDate);
 
-        Member member = new Member(name, email, address, phone, joinDate);
+            em.getTransaction().begin();
+            em.persist(member);
+            em.getTransaction().commit();
 
-        em.getTransaction().begin();
-        em.persist(member);
-        em.getTransaction().commit();
+            System.out.println("Added! " + member.getName() + " member");
 
-        System.out.println("Added! " + member.getName() + " member");
-
+        }catch (Exception e) {
+            System.out.println("Error! Enter Date as correct format: (dd/MM/yyyy)" +e.getMessage());}
     }
-    public void consultMember() {
 
+    public void consultMember() {
+        try{
             System.out.println("Consult member");
             System.out.println("Enter ID: ");
             int id = sc.nextInt();
 
             Member findId = em.find(Member.class, id);
             System.out.println(findId);
-
+        }catch (Exception e) {
+            System.out.println("Error! Enter ID with only number(s)"+e.getMessage());}
     }
 
     public void removeMember() {
-
+        try{
             System.out.println("Remove member action");
             System.out.println("Enter ID: ");
             int id = sc.nextInt();
@@ -69,6 +73,8 @@ public class MemberService {
             em.getTransaction().commit();
 
             System.out.println("Deleted Member");
-        
+        }catch (Exception e) {
+            System.out.println("Error! Enter ID with only number(s)"+e.getMessage());}
     }
+
 }
