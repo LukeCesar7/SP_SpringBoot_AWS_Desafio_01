@@ -77,4 +77,64 @@ public class AuthorBookService {
                     "/ Only number in Quantity / Only numbers in cadastred Author ID space insert! Try again!");
         }
     }
+
+    public void addAuthorBookN() {
+        try {
+            sc.nextLine();
+            System.out.print("Enter name of author: ");
+            String nameAuthor = sc.nextLine();
+
+            System.out.print("Enter author's birth date (dd/MM/yyyy): ");
+            LocalDate birthDate = LocalDate.parse(sc.next(), dTF);
+            sc.nextLine();
+            System.out.print("Enter author's nationality: ");
+            String nationality = sc.nextLine();
+            System.out.println("Enter author's biography: ");
+            String biography = sc.nextLine();
+
+            Author author = new Author(nameAuthor, birthDate, nationality, biography);
+
+            em.getTransaction().begin();
+            em.persist(author);
+            em.getTransaction().commit();
+
+            System.out.println("Enter ISBN: (13-digits) "); 
+            long isbn = sc.nextLong();
+            sc.nextLine();
+            //isbnPolicy
+            Book consultISBN = em.find(Book.class, isbn);
+            String isbnLimit = String.valueOf(isbn);
+
+            if (isbnLimit.length() != 13) {
+                System.out.println("Error! ISBN is not a valid ISBN number!");
+                return;
+            }
+            if (consultISBN != null) {
+                System.out.println("Error! ISBN already exists!");
+                return;
+            }
+
+            System.out.println("Enter title: ");
+            String titleBook = sc.nextLine();
+            System.out.println("Enter publish date: (dd/MM/yyyy) ");
+            LocalDate publishDate = LocalDate.parse(sc.next(), dTF);
+            sc.nextLine();
+            System.out.println("Enter genre: ");
+            String genreBook = sc.nextLine();
+            System.out.println("Enter quantity: ");
+            int qty = sc.nextInt();
+
+
+            Book book = new Book(titleBook, publishDate, isbn, author, genreBook, qty);
+
+            em.getTransaction().begin();
+            em.merge(book); //insert book database
+            em.getTransaction().commit();
+
+            System.out.println("Added! " + titleBook + " book");
+        } catch (Exception e) {
+            System.out.println("Error! Observes date model (dd/MM/yyyy) / Quantity only accepts integer " +
+                    "numbers" + e.getMessage());
+        }
+    }
 }
