@@ -46,4 +46,29 @@ public class MemberService {
         System.out.println("Added! " + member.getName() + " member");
 
     }
+    public void consultMember() {
+
+            System.out.println("Consult member");
+            System.out.println("Enter ID: ");
+            int id = sc.nextInt();
+
+            Member findId = em.find(Member.class, id);
+            System.out.println(findId);
+
+    }
+
+    public void removeMember() {
+
+            System.out.println("Remove member action");
+            System.out.println("Enter ID: ");
+            int id = sc.nextInt();
+            Member findID = em.find(Member.class, id);
+
+            em.getTransaction().begin();
+            em.remove(findID);
+            em.getTransaction().commit();
+
+            System.out.println("Deleted Member");
+        
+    }
 }
