@@ -28,8 +28,7 @@ public class LoanService {
     }
 
     //--------------------------------------------------------------------------------------------------------------LOAN
-
-    public void newLoan() {
+    public void newLoan(){
         System.out.println("Enter member ID: ");
         int memberId = sc.nextInt();
         sc.nextLine();
@@ -70,10 +69,99 @@ public class LoanService {
 
                 System.out.println("Loan Successful!");
             } else {
-                System.out.println("Book not found / available! ");
+                System.out.println("Book not found / not available! ");
             }
         } else {
             System.out.println("Member with unpaid / late loan / Missed Member!");
+        }
+    }
+
+
+    public void consultLoanStatus(){
+
+        System.out.println("Enter Loan ID: ");
+        int loanId = sc.nextInt();
+        sc.nextLine();
+
+        Loan loan = em.find(Loan.class, loanId);
+
+        LocalDate endLoan = loan.getDateLoanFinishes();
+        LocalDate nowLoan = LocalDate.now();
+        Long calcDaysLoan = ChronoUnit.DAYS.between(endLoan, nowLoan);
+
+        if (calcDaysLoan > 0) {
+            System.out.println("Outstanding debts! Days Late: " + calcDaysLoan);
+            System.out.println("System returns: " + LoanState.LATE);
+
+            BigDecimal fine = new BigDecimal(5.00);
+            BigDecimal calcFine = fine.multiply(new BigDecimal(calcDaysLoan));
+            loan.setFineValue(calcFine);
+
+            System.out.println("Total debit R$: " + calcFine);
+
+            em.getTransaction().begin();
+            em.merge(loan);
+            em.getTransaction().commit();
+        }else{
+            System.out.println("Loan on time, no fines to pay");
+        }
+    }
+
+    public void closeLoan(){
+
+        System.out.println("Enter Loan ID: ");
+        int loanId = sc.nextInt();
+        sc.nextLine();
+        System.out.println("status of book:");
+        String status = sc.nextLine();
+
+        Loan loan = em.find(Loan.class, loanId);
+
+        LocalDate endLoan = loan.getDateLoanFinishes();
+        LocalDate nowLoan = LocalDate.now();
+        Long calcDaysLoan = ChronoUnit.DAYS.between(endLoan, nowLoan);
+
+        if (calcDaysLoan == 0) {
+
+            loan.setBookState(status);
+            loan.setFineValue(new BigDecimal(0.0 ));
+
+            em.getTransaction().begin();
+            Book book = loan.getBook(); // Livro associado ao empréstimo
+
+            book.setQty(book.getQty() + 1);
+
+            em.merge(book);
+            loan.setDateLoanFinishes(LocalDate.now());
+            em.getTransaction().commit();
+            System.out.println("Loan Closed Successful");
+
+        } else if (calcDaysLoan > 0) {
+
+            System.out.println("Outstanding debts! Days Late: " + calcDaysLoan);
+            System.out.println("System returns: " + LoanState.LATE);
+
+            BigDecimal fine = new BigDecimal(5.00);
+            BigDecimal calcFine = fine.multiply(new BigDecimal(calcDaysLoan));
+
+            System.out.println("Total debts R$: " + calcFine);
+            System.out.println("System returns: " + LoanState.COMPLETED);
+
+            loan.setBookState(status);
+            loan.setFineValue(calcFine);
+
+            em.getTransaction().begin();
+            Book book = loan.getBook();
+
+            book.setQty(book.getQty() + 1);
+
+            em.merge(book);
+            loan.setDateLoanFinishes(LocalDate.now());
+            em.getTransaction().commit();
+            System.out.println("Loan Closed Successful");
+
+        }else{
+            System.out.println("Loan not found");
         }
     }
 }
