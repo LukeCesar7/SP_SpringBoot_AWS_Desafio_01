@@ -1,0 +1,80 @@
+package entities.services.classServices;
+
+import entities.Author;
+import entities.Book;
+import entities.Person;
+
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
+public class AuthorBookService {
+
+    private Scanner sc;
+    private DateTimeFormatter dTF;
+    private EntityManager em;
+
+    public AuthorBookService() {
+    }
+
+    public AuthorBookService(Scanner sc, DateTimeFormatter dTF, EntityManager em) {
+        this.sc = sc;
+        this.dTF = dTF;
+        this.em = em;
+    }
+
+    //-------------------------------------------------------------------------------------------------------AUTHOR/BOOK
+    public void addAuthorBookY() {
+
+        try {
+            sc.nextLine();
+            System.out.println("Enter ISBN: (13-digits) "); //author-book
+            long isbn = sc.nextLong();
+            sc.nextLine();
+
+            Book consultISBN = em.find(Book.class, isbn);
+            String isbnLimit = String.valueOf(isbn);
+
+            if (isbnLimit.length() != 13) {
+                System.out.println("Error! ISBN is not a valid ISBN number!");
+                return;
+            }
+            if (consultISBN != null) {
+                System.out.println("Error! ISBN already exists!");
+                return;
+            }
+
+            System.out.println("Enter title: ");
+            String titleBook = sc.nextLine();
+            System.out.println("Enter publish date: (dd/MM/yyyy) ");
+            LocalDate publishDate = LocalDate.parse(sc.next(), dTF);
+            sc.nextLine();
+            System.out.println("Enter genre: ");
+            String genreBook = sc.nextLine();
+            System.out.println("Enter quantity: ");
+            int qty = sc.nextInt();
+
+            System.out.print("Enter the ID of the existing author: ");
+            int authorId = sc.nextInt();
+            Author author = em.find(Author.class, authorId);
+
+            // Console related Problem #68
+            if (author == null) {
+                System.out.println("Error! Author not found!");
+            } else {
+                Book book = new Book(titleBook, publishDate, isbn, author, genreBook, qty);
+
+                em.getTransaction().begin();
+                em.persist(book);
+                em.getTransaction().commit();
+
+                System.out.println("Added! " + titleBook + " book");
+
+            }
+        } catch (Exception e) {
+            System.out.println("Error! Datem example insert: 05/02/1997 " +
+                    "/ Only number in Quantity / Only numbers in cadastred Author ID space insert! Try again!");
+        }
+    }
+}
