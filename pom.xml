@@ -47,7 +47,7 @@
                 <configuration>
                     <source>22</source>
                     <target>22</target>
-                    <compilerArgs>--enable-preview</compilerArgs>
+                    <compilerArgs></compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
