@@ -1,4 +1,5 @@
 package entities.services.classServices;
+
 import entities.Book;
 import entities.Loan;
 import entities.Member;
@@ -28,7 +29,9 @@ public class LoanService {
     }
 
     //--------------------------------------------------------------------------------------------------------------LOAN
-    public void newLoan(){
+    public void newLoan() {
+
+        try{
         System.out.println("Enter member ID: ");
         int memberId = sc.nextInt();
         sc.nextLine();
@@ -36,10 +39,9 @@ public class LoanService {
         Member member = em.find(Member.class, memberId);
         Loan loan = em.find(Loan.class, memberId);
 
-        //BigDecimal fineValue = loan.getFineValue();
-        // && fineValue.compareTo(BigDecimal.ZERO) < 5
+        BigDecimal fineValue = loan.getFineValue();
 
-        if (member != null) {
+        if (member != null&& fineValue.compareTo(BigDecimal.ZERO) < 5) {
 
             System.out.println("Enter ISBN Book: ");
             Long isbn = sc.nextLong();
@@ -74,11 +76,14 @@ public class LoanService {
         } else {
             System.out.println("Member with unpaid / late loan / Missed Member!");
         }
+    }catch (Exception e){
+            System.out.println("Error! ISBN may contains 13 digits or Date Format Incorrect " +e.getMessage());}
     }
 
 
-    public void consultLoanStatus(){
+    public void consultLoanStatus() {
 
+        try {
         System.out.println("Enter Loan ID: ");
         int loanId = sc.nextInt();
         sc.nextLine();
@@ -102,13 +107,16 @@ public class LoanService {
             em.getTransaction().begin();
             em.merge(loan);
             em.getTransaction().commit();
-        }else{
+        } else {
             System.out.println("Loan on time, no fines to pay");
         }
+    }catch (Exception e){
+            System.out.println("Enter only Number(s) in ID field " + e.getMessage());}
     }
 
-    public void closeLoan(){
+    public void closeLoan() {
 
+        try {
         System.out.println("Enter Loan ID: ");
         int loanId = sc.nextInt();
         sc.nextLine();
@@ -124,7 +132,7 @@ public class LoanService {
         if (calcDaysLoan == 0) {
 
             loan.setBookState(status);
-            loan.setFineValue(new BigDecimal(0.0 ));
+            loan.setFineValue(new BigDecimal(0.0));
 
             em.getTransaction().begin();
             Book book = loan.getBook(); // Livro associado ao empréstimo
@@ -160,8 +168,10 @@ public class LoanService {
             em.getTransaction().commit();
             System.out.println("Loan Closed Successful");
 
-        }else{
+        } else {
             System.out.println("Loan not found");
         }
-    }
-}
+    }catch (Exception e){
+            System.out.println("Enter only Number(s) in ID field " + e.getMessage());
+        }
+}}

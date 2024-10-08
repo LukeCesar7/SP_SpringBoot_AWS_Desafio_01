@@ -46,7 +46,8 @@ public class MemberService {
             System.out.println("Added! " + member.getName() + " member");
 
         }catch (Exception e) {
-            System.out.println("Error! Enter Date as correct format: (dd/MM/yyyy) " +e.getMessage());}
+            System.out.println("Error! Enter Date as correct format: (dd/MM/yyyy) or Email already exists" +
+                    " " +e.getMessage());}
     }
 
     public void consultMember() {
