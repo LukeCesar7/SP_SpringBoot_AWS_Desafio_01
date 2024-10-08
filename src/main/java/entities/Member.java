@@ -1,9 +1,6 @@
 package entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -16,7 +13,10 @@ public class Member extends Person implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(unique=true)
     private String email;
+
     private String address;
     private String phone;
     private LocalDate joinDate;
