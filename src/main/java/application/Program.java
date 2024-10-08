@@ -1,5 +1,7 @@
 package application;
+
 import entities.services.MenuService;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -19,10 +21,18 @@ public class Program {
 
         MenuService menuService = new MenuService(sc, dTF, em);
 
-        menuService.menu();
+        boolean forever = true;
 
+        while (forever) {
+            menuService.menu();
+
+             {
+                forever = true;
+            }
+        }
         sc.close();
         em.close();
         emf.close();
     }
+
 }

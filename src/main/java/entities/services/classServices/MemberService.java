@@ -46,7 +46,7 @@ public class MemberService {
             System.out.println("Added! " + member.getName() + " member");
 
         }catch (Exception e) {
-            System.out.println("Error! Enter Date as correct format: (dd/MM/yyyy)" +e.getMessage());}
+            System.out.println("Error! Enter Date as correct format: (dd/MM/yyyy) " +e.getMessage());}
     }
 
     public void consultMember() {
@@ -56,7 +56,9 @@ public class MemberService {
             int id = sc.nextInt();
 
             Member findId = em.find(Member.class, id);
-            System.out.println(findId);
+            if(findId == null) {
+                System.out.println("Member not found");
+            }
         }catch (Exception e) {
             System.out.println("Error! Enter ID with only number(s)"+e.getMessage());}
     }
