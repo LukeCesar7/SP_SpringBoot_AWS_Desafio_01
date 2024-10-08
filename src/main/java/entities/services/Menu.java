@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class MenuService {
+public class Menu {
 
     private Scanner sc;
     private DateTimeFormatter dTF;
@@ -18,7 +18,7 @@ public class MenuService {
     private AuthorBookService authorBookService;
     private LoanService loanService;
 
-    public MenuService(Scanner sc, DateTimeFormatter dTF, EntityManager em) {
+    public Menu(Scanner sc, DateTimeFormatter dTF, EntityManager em) {
         this.sc = sc;
         this.dTF = dTF;
         this.em = em;

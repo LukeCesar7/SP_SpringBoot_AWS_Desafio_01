@@ -1,6 +1,6 @@
 package application;
 
-import entities.services.MenuService;
+import entities.services.Menu;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -19,12 +19,12 @@ public class Program {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("library_test");
         EntityManager em = emf.createEntityManager();
 
-        MenuService menuService = new MenuService(sc, dTF, em);
+        Menu menu = new Menu(sc, dTF, em);
 
         boolean forever = true;
 
         while (forever) {
-            menuService.menu();
+            menu.menu();
 
              {
                 forever = true;
